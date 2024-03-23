@@ -1,12 +1,11 @@
 import React from "react";
 import { MovieCard } from "./";
-export default function MoviesList() {
+export default function MoviesList({ movies, setSelectedMovieId }) {
 	return (
 		<ul className="text-gray-50">
-			<MovieCard />
-			<MovieCard />
-			<MovieCard />
-			<MovieCard />
+			{movies?.map((movie, i) => (
+				<MovieCard movie={movie} key={i} setSelectedMovieId={setSelectedMovieId} />
+			))}
 		</ul>
 	);
 }

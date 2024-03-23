@@ -1,35 +1,46 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { MovieRatingWidget } from "./";
-export default function MovieCardDetails() {
+export default function MovieCardDetails({ selectedMovie }) {
+	const {
+		Poster: poster,
+		Title: title,
+		Released: releaseDate,
+		Runtime: duration,
+		Genre: genre,
+		imdbRating: rating,
+		Plot: plot,
+		Actors: actors,
+		Director: director
+
+	} = selectedMovie;
+
 	return (
 		<>
 			<div className="flex gap-6 items-center text-gray-50 bg-white/5 ">
 				<div className="w-16 sm:w-20 md:w-24">
 					<img
-						src="https://m.media-amazon.com/images/M/MV5BZDEyN2NhMjgtMjdhNi00MmNlLWE5YTgtZGE4MzNjMTRlMGEwXkEyXkFqcGdeQXVyNDUyOTg3Njg@._V1_SX300.jpg"
-						alt=""
+						src={poster}
+						alt="poster"
 					/>
 				</div>
 				<div className="box text-center">
-					<h3 className="title font-medium mb-3 text-lg">Spider-Man</h3>
+					<h3 className="title font-medium mb-3 text-lg">{title}</h3>
 					<div className="box text-xs text-white space-y-2">
-						<p className="">03 May 2002 . 121 min</p>
-						<p className="text-xs">Action, Adventure, Sci-Fi</p>
-						<p className="text-xs">⭐️ 7.4 IMDb rating</p>
+						<p className="">{releaseDate} . {duration}</p>
+						<p className="text-xs">{genre}</p>
+						<p className="text-xs">⭐️ {rating} IMDb rating</p>
 					</div>
 				</div>
 			</div>
-			<div className="box px-8 text-gray-100 text-xs space-y-4">
+			<div className="box p-8 text-gray-100 text-xs space-y-4">
 				<MovieRatingWidget />
 				<p className="summary ">
-					After being bitten by a genetically-modified spider, a shy
-					teenager gains spider-like abilities that he uses to fight
-					injustice as a masked superhero and face a vengeful enemy.
+					{plot}
 				</p>
 				<p className="actors">
-					Starring Tobey Maguire, Kirsten Dunst, Willem Dafoe
+					Starring {actors}
 				</p>
-				<p className="director">Directed by Sam Raimi</p>
+				<p className="director">Directed by {director}</p>
 			</div>
 		</>
 	);

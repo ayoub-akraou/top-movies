@@ -1,17 +1,19 @@
 import React from 'react'
 
-export default function MovieCard() {
+export default function MovieCard({movie, setSelectedMovieId}) {
+   const {Poster: poster, Title: title, Year: year, imdbID: id} = movie;
+   
   return (
-   <li className="px-6 py-4 flex gap-5 items-center border-b border-gray-700 hover:bg-white/5 transition-colors cursor-pointer">
+   <li onClick={() => setSelectedMovieId(id)} className="px-6 py-4 flex gap-5 items-center border-b border-gray-700 hover:bg-white/5 transition-colors cursor-pointer">
    <div className="w-10">
       <img
-         src="https://m.media-amazon.com/images/M/MV5BZDEyN2NhMjgtMjdhNi00MmNlLWE5YTgtZGE4MzNjMTRlMGEwXkEyXkFqcGdeQXVyNDUyOTg3Njg@._V1_SX300.jpg"
+         src={poster}
          alt=""
       />
    </div>
    <div className="box text-sm">
-      <h3 className="title font-medium mb-1">Spider-Man</h3>
-      <p className="release-date">🗓 2002</p>
+      <h3 className="title font-medium mb-1">{title}</h3>
+      <p className="release-date">🗓 {year}</p>
    </div>
 </li>
   )
