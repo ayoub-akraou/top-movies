@@ -4,7 +4,7 @@ export default function MovieCard({movie, setSelectedMovieId}) {
    const {Poster: poster, Title: title, Year: year, imdbID: id} = movie;
    
   return (
-   <li onClick={() => setSelectedMovieId(id)} className="px-6 py-4 flex gap-5 items-center border-b border-gray-700 hover:bg-white/5 transition-colors cursor-pointer">
+   <li onClick={() => setSelectedMovieId(currentId => currentId === id ? null : id)} className="px-6 py-4 flex gap-5 items-center border-b border-gray-700 hover:bg-white/5 transition-colors cursor-pointer">
    <div className="w-10">
       <img
          src={poster}

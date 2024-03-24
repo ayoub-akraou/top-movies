@@ -1,28 +1,82 @@
-import React from "react";
+import React, { useState } from "react";
 
-export default function MovieRatingWidget({className}) {
+export default function MovieRatingWidget({
+	className = "",
+	userRating,
+	setUserRating,
+	watched,
+	setWatched,
+	movie,
+	setSelectedMovieId,
+}) {
+	const [tempRating, setTempRating] = useState(0);
+	function handleClick() {
+		const {
+			Poster: poster,
+			Title: title,
+			imdbRating,
+			Runtime: duration,
+			imdbID: id,
+		} = movie;
+		if (watched.some((movie) => {
+			console.log(movie.id);
+			console.log("setSelectedMovieId", id);
+			return movie.id === id})) return;
+		setWatched((watched) => [
+			...watched,
+			{
+				poster,
+				title,
+				imdbRating,
+				userRating,
+				duration: duration.split(" ")[0],
+				id,
+			},
+		]);
+		setSelectedMovieId(null);
+	}
 	return (
 		<div className={`${className} rounded-lg mx-auto bg-white/5 px-6 py-4`}>
-			<RatingStars />
-			<button className="w-full rounded-full bg-emerald-500 text-white text-sm font-medium text-center py-1 active:scale-95">
-					+ Add to list{" "}
+			<div className="flex">
+				{Array.from({ length: 10 }, (_, i) => (
+					<Star
+						key={i}
+						rate={i + 1}
+						tempRating={tempRating}
+						setTempRating={setTempRating}
+						userRating={userRating}
+						setUserRating={setUserRating}
+					/>
+				))}
+			</div>
+			{userRating > 0 && (
+				<button
+					onClick={handleClick}
+					className="mt-4 w-full rounded-full bg-emerald-500 text-white text-sm font-medium text-center py-1 active:scale-95"
+				>
+					+ Add to list
 				</button>
+			)}
 		</div>
 	);
 }
 
-export function RatingStars() {
-   return (<div className="flex mb-4">
-	{Array.from({ length: 10 }, (_, i) => (
-		<Star key={i} rate={i + 1} />
-	))}
-	
-</div>)
-}
+export function Star({
+	rate,
+	userRating,
+	setUserRating,
+	tempRating,
+	setTempRating,
+}) {
+	const filled = userRating >= rate || tempRating >= rate;
 
-export function Star({ filled = false, rate }) {
 	return (
-		<div className="w-5">
+		<div
+			className="w-5"
+			onClick={() => setUserRating(rate)}
+			onMouseEnter={() => setTempRating(rate)}
+			onMouseLeave={() => setTempRating(0)}
+		>
 			{filled && (
 				<svg
 					xmlns="http://www.w3.org/2000/svg"

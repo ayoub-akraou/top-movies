@@ -10,6 +10,7 @@ import {
 	MovieCardDetails,
 	Loading,
 	ErrorMessage,
+
 } from "./components";
 
 const KEY = "f4078131";
@@ -19,10 +20,10 @@ function App() {
 	const [movies, setMovies] = useState([]);
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState("");
-	const [selectedMovieId, setSelectedMovieId] = useState("");
-	const [selectedMovie, setSelectedMovie] = useState({});
-	console.log(selectedMovieId);
-	function handleChange(e) {
+	const [selectedMovieId, setSelectedMovieId] = useState(null);
+	const [watched, setWatched] = useState([]);
+console.log(watched);
+	function updateQuery(e) {
 		setQuery(e.target.value);
 		setError("");
 	}
@@ -50,24 +51,10 @@ function App() {
 		})();
 	}, [query]);
 
-	useEffect(
-		function () {
-			(async () => {
-				if (!selectedMovieId) return;
-				setSelectedMovie(null)
-				const response = await fetch(
-					`http://www.omdbapi.com/?apikey=${KEY}&i=${selectedMovieId}`
-				);
-				const result = await response.json();
-				setSelectedMovie(result)
-			})();
-		},
-		[selectedMovieId]
-	);
 	return (
 		<>
 			<Header>
-				<SearchBar query={query} onChange={handleChange} />
+				<SearchBar query={query} onChange={updateQuery} />
 			</Header>
 			<main className="flex gap-6 mt-6 w-11/12 md:max-w-[75%] mx-auto">
 				<Box className="flex-1">
@@ -84,11 +71,15 @@ function App() {
 
 				<Box className="flex-1">
 					<ShowHideButton>+</ShowHideButton>
-					<MoviesYouWatched />
-					{selectedMovie ? (
-						<MovieCardDetails selectedMovie={selectedMovie} />
-					) : (
-						<Loading />
+					{!selectedMovieId && <MoviesYouWatched watched={watched} setWatched={setWatched} />}
+					{selectedMovieId && (
+						<MovieCardDetails
+							KEY={KEY}
+							selectedMovieId={selectedMovieId}
+							setSelectedMovieId={setSelectedMovieId}
+							watched={watched}
+							setWatched={setWatched}
+						/>
 					)}
 				</Box>
 			</main>
