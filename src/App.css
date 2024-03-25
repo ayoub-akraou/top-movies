@@ -1,10 +1,12 @@
 #root {
-   background-color: #181818;
-   padding: 1rem;
-   min-height: 100vh;
+  padding: 1rem;
+  min-height: 100vh;
+  margin: 0 auto;
+  max-width: 1000px;
 }
 
 body {
+  background-color: #181818;
   font-family: "Outfit", sans-serif;
   color: whitesmoke;
 }

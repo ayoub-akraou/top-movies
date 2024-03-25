@@ -1,11 +1,16 @@
 import { useState, useEffect } from "react";
 import { MovieRatingWidget, Loading, ErrorMessage } from "./";
-export default function MovieCardDetails({ selectedMovieId, setSelectedMovieId, KEY, watched, setWatched }) {
+export default function MovieCardDetails({
+	selectedMovieId,
+	setSelectedMovieId,
+	KEY,
+	watched,
+	setWatched,
+}) {
 	const [movie, setMovie] = useState({});
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState("");
 	const [userRating, setRating] = useState(0);
-	console.log(movie);
 
 	useEffect(
 		function () {
@@ -20,7 +25,6 @@ export default function MovieCardDetails({ selectedMovieId, setSelectedMovieId, 
 					const result = await response.json();
 					setMovie(result);
 				} catch (error) {
-					
 					setError(error.message);
 				} finally {
 					setIsLoading(false);
@@ -29,8 +33,33 @@ export default function MovieCardDetails({ selectedMovieId, setSelectedMovieId, 
 		},
 		[selectedMovieId]
 	);
-const isRated = watched.every(watchedMovie => watchedMovie.id !== movie.imdbID)
-const ratedMovie = watched.find(watchedMovie => watchedMovie.id === movie.imdbID)
+
+	const { Title: title } = movie;
+	useEffect(() => {
+		if (selectedMovieId && title) document.title = `Movie | ${title}`;
+
+		return () => {
+			document.title = "topMovies";
+		};
+	}, [selectedMovieId, title]);
+
+useEffect(function () {
+	function handleEvent(e) {
+		setSelectedMovieId(null)
+		console.log(1);
+	}
+	document.addEventListener("keydown", handleEvent)
+	return function () {
+		document.removeEventListener("keydown", handleEvent)
+	}
+}, [])
+
+	const isRated = watched.every(
+		(watchedMovie) => watchedMovie.id !== movie.imdbID
+	);
+	const ratedMovie = watched.find(
+		(watchedMovie) => watchedMovie.id === movie.imdbID
+	);
 	return (
 		<>
 			{isLoading && <Loading />}
@@ -39,14 +68,20 @@ const ratedMovie = watched.find(watchedMovie => watchedMovie.id === movie.imdbID
 				<>
 					<CardHeader movie={movie} />
 					<section className="box p-8 text-gray-100 text-xs space-y-4">
-						{isRated ? <MovieRatingWidget
-							userRating={userRating}
-							setUserRating={setRating}
-							movie={movie}
-							watched={watched}
-							setWatched={setWatched}
-							setSelectedMovieId={setSelectedMovieId}
-						/> : <p className="text-center p-4 rounded-lg bg-white/10">you rated this movie with {ratedMovie.userRating} 🌟</p>}
+						{isRated ? (
+							<MovieRatingWidget
+								userRating={userRating}
+								setUserRating={setRating}
+								movie={movie}
+								watched={watched}
+								setWatched={setWatched}
+								setSelectedMovieId={setSelectedMovieId}
+							/>
+						) : (
+							<p className="text-center p-4 rounded-lg bg-white/10">
+								you rated this movie with {ratedMovie.userRating} 🌟
+							</p>
+						)}
 						<Details movie={movie} />
 					</section>
 				</>

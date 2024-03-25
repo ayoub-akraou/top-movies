@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-export default function SearchBar({ className = "", query, onChange }) {
+export default function SearchBar({ className = "", query, onChange}) {
 	return (
 		<input
 			value={query}

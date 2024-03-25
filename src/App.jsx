@@ -10,7 +10,6 @@ import {
 	MovieCardDetails,
 	Loading,
 	ErrorMessage,
-
 } from "./components";
 
 const KEY = "f4078131";
@@ -22,12 +21,15 @@ function App() {
 	const [error, setError] = useState("");
 	const [selectedMovieId, setSelectedMovieId] = useState(null);
 	const [watched, setWatched] = useState([]);
-console.log(watched);
+	const [showMoviesList, setShowMoviesList] = useState(true)
+	const [showMovieDetails, setShowMovieDetails] = useState(true)
 	function updateQuery(e) {
 		setQuery(e.target.value);
+		setSelectedMovieId(null);
 		setError("");
 	}
-
+	
+	const controller = new AbortController();
 	useEffect(() => {
 		(async function () {
 			try {
@@ -35,31 +37,34 @@ console.log(watched);
 
 				setIsLoading(true);
 				const response = await fetch(
-					`http://www.omdbapi.com/?apikey=${KEY}&s=${query}`
+					`http://www.omdbapi.com/?apikey=${KEY}&s=${query}`,
+					{ signal: controller.signal }
 				);
 				const result = await response.json();
 				if (!response.ok) throw new Error("Something went wrong!");
 				if (result.Response === "False") throw new Error(result.Error);
 				setMovies(result?.Search);
 			} catch (error) {
-				setError(error.message);
 				setMovies([]);
-				console.error(error);
+				if (error.name !== "AbortError") setError(error.message);
 			} finally {
 				setIsLoading(false);
 			}
 		})();
+		return () => {
+			controller.abort();
+		};
 	}, [query]);
 
 	return (
 		<>
-			<Header>
+			<Header numberOfResults={movies.length}>
 				<SearchBar query={query} onChange={updateQuery} />
 			</Header>
 			<main className="flex gap-6 mt-6 w-11/12 md:max-w-[75%] mx-auto">
 				<Box className="flex-1">
-					<ShowHideButton>+</ShowHideButton>
-					{!isLoading && (
+					<ShowHideButton onClick={() => setShowMoviesList(curr => !curr)}>{showMoviesList ? "-" : "+"}</ShowHideButton>
+					{!isLoading && showMoviesList && (
 						<MoviesList
 							movies={movies}
 							setSelectedMovieId={setSelectedMovieId}
@@ -70,9 +75,11 @@ console.log(watched);
 				</Box>
 
 				<Box className="flex-1">
-					<ShowHideButton>+</ShowHideButton>
-					{!selectedMovieId && <MoviesYouWatched watched={watched} setWatched={setWatched} />}
-					{selectedMovieId && (
+				<ShowHideButton onClick={() => setShowMovieDetails(curr => !curr)}>{showMovieDetails ? "-" : "+"}</ShowHideButton>
+					{!selectedMovieId && showMovieDetails && (
+						<MoviesYouWatched watched={watched} setWatched={setWatched} />
+					)}
+					{selectedMovieId && showMovieDetails && (
 						<MovieCardDetails
 							KEY={KEY}
 							selectedMovieId={selectedMovieId}
