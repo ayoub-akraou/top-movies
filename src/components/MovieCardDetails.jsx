@@ -43,16 +43,16 @@ export default function MovieCardDetails({
 		};
 	}, [selectedMovieId, title]);
 
-useEffect(function () {
-	function handleEvent(e) {
-		setSelectedMovieId(null)
-		console.log(1);
-	}
-	document.addEventListener("keydown", handleEvent)
-	return function () {
-		document.removeEventListener("keydown", handleEvent)
-	}
-}, [])
+	useEffect(function () {
+		function handleEvent(e) {
+			setSelectedMovieId(null);
+			console.log(1);
+		}
+		document.addEventListener("keydown", handleEvent);
+		return function () {
+			document.removeEventListener("keydown", handleEvent);
+		};
+	}, []);
 
 	const isRated = watched.every(
 		(watchedMovie) => watchedMovie.id !== movie.imdbID

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 export default function MovieRatingWidget({
 	className = "",
@@ -10,31 +10,33 @@ export default function MovieRatingWidget({
 	setSelectedMovieId,
 }) {
 	const [tempRating, setTempRating] = useState(0);
+	const {
+		Poster: poster,
+		Title: title,
+		imdbRating,
+		Runtime: duration,
+		imdbID: id,
+	} = movie;
+	const watchedMovie = {
+		poster,
+		title,
+		imdbRating,
+		userRating,
+		duration: duration?.split(" ")[0],
+		id,
+	}
 	function handleClick() {
-		const {
-			Poster: poster,
-			Title: title,
-			imdbRating,
-			Runtime: duration,
-			imdbID: id,
-		} = movie;
 		if (watched.some((movie) => {
 			console.log(movie.id);
 			console.log("setSelectedMovieId", id);
 			return movie.id === id})) return;
 		setWatched((watched) => [
 			...watched,
-			{
-				poster,
-				title,
-				imdbRating,
-				userRating,
-				duration: duration.split(" ")[0],
-				id,
-			},
+			watchedMovie,
 		]);
 		setSelectedMovieId(null);
 	}
+	
 	return (
 		<div className={`${className} rounded-lg mx-auto bg-white/5 px-6 py-4`}>
 			<div className="flex">

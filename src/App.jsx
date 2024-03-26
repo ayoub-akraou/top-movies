@@ -10,6 +10,7 @@ import {
 	MovieCardDetails,
 	Loading,
 	ErrorMessage,
+	Logo,
 } from "./components";
 
 const KEY = "f4078131";
@@ -20,15 +21,19 @@ function App() {
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState("");
 	const [selectedMovieId, setSelectedMovieId] = useState(null);
-	const [watched, setWatched] = useState([]);
-	const [showMoviesList, setShowMoviesList] = useState(true)
-	const [showMovieDetails, setShowMovieDetails] = useState(true)
+	const [watched, setWatched] = useState(function () {
+		if (!localStorage.getItem("watched")) return [];
+		return JSON.parse(localStorage.getItem("watched"));
+	});
+	console.log(watched);
+	const [showMoviesList, setShowMoviesList] = useState(true);
+	const [showMovieDetails, setShowMovieDetails] = useState(true);
 	function updateQuery(e) {
 		setQuery(e.target.value);
 		setSelectedMovieId(null);
 		setError("");
 	}
-	
+
 	const controller = new AbortController();
 	useEffect(() => {
 		(async function () {
@@ -55,7 +60,13 @@ function App() {
 			controller.abort();
 		};
 	}, [query]);
-
+	
+	useEffect(
+		function () {
+			localStorage.setItem("watched", JSON.stringify(watched));
+		},
+		[watched]
+	);
 	return (
 		<>
 			<Header numberOfResults={movies.length}>
@@ -63,7 +74,11 @@ function App() {
 			</Header>
 			<main className="flex gap-6 mt-6 w-11/12 md:max-w-[75%] mx-auto">
 				<Box className="flex-1">
-					<ShowHideButton onClick={() => setShowMoviesList(curr => !curr)}>{showMoviesList ? "-" : "+"}</ShowHideButton>
+					<ShowHideButton
+						onClick={() => setShowMoviesList((curr) => !curr)}
+					>
+						{showMoviesList ? "-" : "+"}
+					</ShowHideButton>
 					{!isLoading && showMoviesList && (
 						<MoviesList
 							movies={movies}
@@ -75,7 +90,11 @@ function App() {
 				</Box>
 
 				<Box className="flex-1">
-				<ShowHideButton onClick={() => setShowMovieDetails(curr => !curr)}>{showMovieDetails ? "-" : "+"}</ShowHideButton>
+					<ShowHideButton
+						onClick={() => setShowMovieDetails((curr) => !curr)}
+					>
+						{showMovieDetails ? "-" : "+"}
+					</ShowHideButton>
 					{!selectedMovieId && showMovieDetails && (
 						<MoviesYouWatched watched={watched} setWatched={setWatched} />
 					)}
