@@ -70,7 +70,7 @@ function App() {
 	return (
 		<>
 			<Header numberOfResults={movies.length}>
-				<SearchBar query={query} onChange={updateQuery} />
+				<SearchBar query={query} onChange={updateQuery} setQuery={setQuery} setSelectedMovieId={setSelectedMovieId}/>
 			</Header>
 			<main className="flex gap-6 mt-6 w-11/12 md:max-w-[75%] mx-auto">
 				<Box className="flex-1">
