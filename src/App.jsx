@@ -42,7 +42,7 @@ function App() {
 
 				setIsLoading(true);
 				const response = await fetch(
-					`http://www.omdbapi.com/?apikey=${KEY}&s=${query}`,
+					`https://www.omdbapi.com/?apikey=${KEY}&s=${query}`,
 					{ signal: controller.signal }
 				);
 				const result = await response.json();
