@@ -20,7 +20,7 @@ export default function MovieCardDetails({
 					setIsLoading(true);
 					setError("");
 					const response = await fetch(
-						`http://www.omdbapi.com/?apikey=${KEY}&i=${selectedMovieId}`
+						`https://www.omdbapi.com/?apikey=${KEY}&i=${selectedMovieId}`
 					);
 					const result = await response.json();
 					setMovie(result);
